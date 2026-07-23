@@ -1,0 +1,46 @@
+# --- HuggingFace Hub (Pinned to what was in your logs) ---
+huggingface-hub==0.36.0
+
+# --- PyTorch CPU (Removed markdown formatting) ---
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
+
+# --- Core Data ---
+numpy==2.2.6
+pandas==2.2.3
+
+# --- RAG Framework (LlamaIndex) ---
+llama-index-core
+llama-index-embeddings-huggingface
+llama-index-vector-stores-opensearch
+llama-index-readers-file
+llama-index-llms-groq
+# Azure ML endpoint uses direct HTTP (requests) - no extra llama-index LLM package needed
+
+# --- NLP & Embeddings ---
+sentence-transformers==5.2.0
+
+# --- Vector Database ---
+opensearch-py
+
+# --- Cloud (AWS S3, Snowflake) ---
+boto3==1.42.12
+snowflake-connector-python==4.1.1
+databricks-sql-connector==4.2.3
+google-cloud-bigquery
+
+# --- OCR & PDF Parsing ---
+pymupdf==1.26.7
+
+# --- Web & Utilities ---
+streamlit==1.42.0
+python-dotenv==1.2.1
+requests
+
+fastapi
+uvicorn
+
+# --- Observability (OpenTelemetry) ---
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-exporter-otlp-proto-http
