@@ -5,6 +5,8 @@ import logging
 import uuid
 from dotenv import load_dotenv
 from datetime import datetime
+import asyncio
+from omni_agent import run_omni_agent
 
 # Import ContextVars to set agent_id directly on Submit
 try:
@@ -57,6 +59,36 @@ _init_vistora_instrumentation()
 from logic import assess_credit_risk, extract_risk_category, extract_approval_status, extract_loan_amount
 
 st.set_page_config(page_title="AI Credit Analyst", layout="wide")
+
+# ----- NEW NAVIGATION LOGIC -----
+app_mode = st.sidebar.selectbox("Choose App Mode:", ["🏦 AI Credit Risk Assistant", "🤖 Omni-Agent (HN & Pets)"])
+
+if app_mode == "🤖 Omni-Agent (HN & Pets)":
+    st.title("🤖 Omni-Agent (HackerNews + Petstore)")
+    st.markdown("This agent natively routes requests between a **Local MCP Server** (Hacker News) and an **AWS API Gateway** (Pet Store) using **Groq**.")
+    
+    # Initialize chat history
+    if "omni_messages" not in st.session_state:
+        st.session_state.omni_messages = []
+        
+    for msg in st.session_state.omni_messages:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
+            
+    prompt = st.chat_input("Try asking: 'What are the top 3 HN stories and do you have any cats?'")
+    if prompt:
+        st.session_state.omni_messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+            
+        with st.chat_message("assistant"):
+            with st.spinner("Connecting to tools..."):
+                response = asyncio.run(run_omni_agent(prompt))
+                st.markdown(response)
+        st.session_state.omni_messages.append({"role": "assistant", "content": response})
+        
+    st.stop() # Prevent the Credit Risk app from rendering on this page
+# --------------------------------
 
 st.title("🏦 AI Credit Risk Assistant")
 st.markdown(
