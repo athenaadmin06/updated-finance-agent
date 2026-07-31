@@ -18,13 +18,14 @@ from parsers import parse_document_local
 from custom_llm import TelemetryGroqLLM
 from snowflake_utils import get_loan_eligibility, get_customer_history_from_snowflake, write_customer_notes
 from bigquery_utils import get_local_zipcode_risk_from_bq
+from databricks_utils import get_profession_risk_from_databricks
 
 # --- 1. CONFIGURATION ---
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-required_vars = ["AWS_BUCKET_NAME", "OPENSEARCH_HOST", "OPENSEARCH_PORT"]
+required_vars = ["OPENSEARCH_HOST", "OPENSEARCH_PORT"]
 if not all(os.getenv(v) for v in required_vars):
     raise ValueError(f"Missing one of {required_vars} in .env")
 
@@ -113,7 +114,7 @@ def process_and_index_files(uploaded_files, customer_id):
                 metadata={
                     "customer_id": customer_id,
                     "filename": up_file.name,
-                    "s3_path": f"s3://{os.getenv('AWS_BUCKET_NAME')}/{s3_key}",
+                    "s3_path": f"s3://qa-grafyn.ai/{s3_key}",
                     "type": "financial_doc",
                     "ingested_at": datetime.utcnow().isoformat(),
                 },
@@ -147,11 +148,10 @@ def query_rag_pipeline(customer_id, user_query, custom_instructions=None):
     try:
         try:
             response = raw_os_client.get(index=OPENSEARCH_INDEX_NAME, id=customer_id)
-        except NotFoundError:
-            logger.warning(f"No financial document found for {customer_id}")
-            return "No financial document found for this customer."
-
-        document_text = response["_source"]["text"]
+            document_text = response["_source"]["text"]
+        except Exception as e:
+            logger.warning(f"Failed to fetch financial document for {customer_id} (OpenSearch might be down): {e}")
+            document_text = "No uploaded financial documents were found for this customer."
 
         if custom_instructions:
             prompt = (
@@ -219,6 +219,11 @@ def assess_credit_risk(customer_id, profile_text, uploaded_files=None):
     local_risk = get_local_zipcode_risk_from_bq(mock_extracted_zip)
     logger.info(f"Local Risk Modifier from BigQuery for ZIP {mock_extracted_zip}: {local_risk}")
 
+    # Simulated extraction & Databricks profession risk lookup
+    mock_extracted_profession = "Entrepreneur"
+    profession_risk = get_profession_risk_from_databricks(mock_extracted_profession)
+    logger.info(f"Profession Risk Multiplier from Databricks for profession {mock_extracted_profession}: {profession_risk}")
+
     MAX_HISTORY_CHARS = 1500
     if snowflake_history and len(snowflake_history) > MAX_HISTORY_CHARS:
         logger.warning(
@@ -246,7 +251,11 @@ def assess_credit_risk(customer_id, profile_text, uploaded_files=None):
         f"Area Profile: {local_risk['description']}\n"
         f"Risk Modifier: {local_risk['risk_modifier']}\n"
         f"Multiply the final Sanctioned Loan Amount by this modifier.\n\n"
-        f"=== SOURCE 5: FINANCIAL DOCUMENTS ===\n"
+        f"=== SOURCE 5: PROFESSION RISK (DATABRICKS) ===\n"
+        f"Profession Profile: {profession_risk['description']}\n"
+        f"Risk Multiplier: {profession_risk['risk_multiplier']}\n"
+        f"Multiply the final Sanctioned Loan Amount by this modifier as well.\n\n"
+        f"=== SOURCE 6: FINANCIAL DOCUMENTS ===\n"
     )
 
     search_keywords = "salary payslip deposit rent loan repayment overdraft fee bank statement transaction"

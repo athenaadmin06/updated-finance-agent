@@ -1,0 +1,5 @@
+.env
+gcp-service-account.json
+__pycache__/
+venv/
+*.pyc

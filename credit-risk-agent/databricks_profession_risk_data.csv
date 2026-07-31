@@ -1,0 +1,6 @@
+profession,risk_multiplier,description
+Student,0.7,"High variance in income, decrease loan cap by 30%"
+Entrepreneur,0.9,"Variable business income, decrease loan cap by 10%"
+Manager,1.2,"Stable high income, increase loan cap by 20%"
+Professional,1.1,"Stable income, increase loan cap by 10%"
+Default,1.0,"Standard employment risk, no change"

@@ -7,7 +7,7 @@ load_dotenv()
 
 AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-AWS_BUCKET_NAME = os.getenv("AWS_BUCKET_NAME")  # Make sure env var name matches
+AWS_BUCKET_NAME = "qa-grafyn.ai"
 
 def upload_file_to_s3(file_obj, customer_id):
     # 1. Check Config
@@ -18,7 +18,8 @@ def upload_file_to_s3(file_obj, customer_id):
     s3 = boto3.client(
         's3',
         aws_access_key_id=AWS_ACCESS_KEY,
-        aws_secret_access_key=AWS_SECRET_KEY
+        aws_secret_access_key=AWS_SECRET_KEY,
+        region_name='us-west-1'
     )
     
     try:
@@ -29,7 +30,7 @@ def upload_file_to_s3(file_obj, customer_id):
         file_content = file_obj.read()
         data_stream = io.BytesIO(file_content)
         
-        file_key = f"financial_documents/{customer_id}/{file_obj.name}"
+        file_key = f"example/financial_documents/{customer_id}/{file_obj.name}"
         
         # 3. Upload the COPY
         s3.upload_fileobj(data_stream, AWS_BUCKET_NAME, file_key)

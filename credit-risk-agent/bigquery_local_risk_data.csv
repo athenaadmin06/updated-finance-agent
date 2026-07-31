@@ -1,0 +1,5 @@
+zip_code,area_median_income,risk_modifier,description
+90210,150000,0.8,"Low risk area, increase loan cap by 20%"
+33101,35000,1.2,"High risk area, decrease loan cap by 20%"
+10001,80000,1.0,"Standard risk area, no change"
+60601,95000,1.0,"Standard risk area, no change"
