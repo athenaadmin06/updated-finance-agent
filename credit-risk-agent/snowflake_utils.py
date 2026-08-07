@@ -122,6 +122,7 @@ def write_customer_notes(customer_id, notes_text, credit_card):
 
     except Exception as e:
         print(f"Error writing customer notes to Snowflake: {e}")
+        raise e
     
     finally:
         if 'cursor' in locals() and cursor: cursor.close()

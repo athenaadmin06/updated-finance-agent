@@ -1,0 +1,8 @@
+{
+    "type": "bigquery_execute",
+    "zip": "90210",
+    "local_risk": {
+        "risk_modifier": 0.8,
+        "description": "Low risk area, increase loan cap by 20%"
+    }
+}

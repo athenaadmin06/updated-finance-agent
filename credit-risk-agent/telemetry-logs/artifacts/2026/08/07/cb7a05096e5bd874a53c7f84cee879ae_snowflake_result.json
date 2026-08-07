@@ -1,0 +1,8 @@
+{
+    "type": "snowflake_policy",
+    "salary": 850000,
+    "policy": {
+        "max_loan_multiplier": 5.0,
+        "max_loan_cap_inr": 5000000
+    }
+}
