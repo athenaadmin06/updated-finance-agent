@@ -4,6 +4,7 @@ import logging
 import time
 import uuid
 from datetime import datetime
+import traceback
 
 from dotenv import load_dotenv
 
@@ -117,6 +118,7 @@ from custom_llm import TelemetryGroqLLM
 from snowflake_utils import get_loan_eligibility, get_customer_history_from_snowflake, write_customer_notes
 from bigquery_utils import get_local_zipcode_risk_from_bq
 from databricks_utils import get_profession_risk_from_databricks
+from mysql_utils import get_fraud_status_aws, get_fraud_status_azure
 
 # --- 1. CONFIGURATION ---
 load_dotenv()
@@ -379,6 +381,46 @@ def assess_credit_risk(customer_id, profile_text, uploaded_files=None):
         logger.info(f"Profession Risk Multiplier from Databricks for profession {mock_extracted_profession}: {profession_risk}")
         save_artifact_and_emit_event(source_span, "databricks", {"type": "databricks_execute", "profession": mock_extracted_profession, "profession_risk": profession_risk})
 
+    aws_fraud_data = None
+    with tracer.start_as_current_span("rag.source_access") as source_span:
+        source_span.set_attribute("rag.source.name", "aws_mysql")
+        source_span.set_attribute("db.system", "mysql")
+        try:
+            aws_fraud_data = get_fraud_status_aws(customer_id)
+            save_artifact_and_emit_event(source_span, "aws_mysql", {"type": "mysql_execute", "fraud_data": aws_fraud_data})
+        except Exception as e:
+            source_span.add_event(
+                "exception",
+                attributes={
+                    "exception.type": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ != "builtins" else type(e).__name__,
+                    "exception.message": str(e),
+                    "exception.stacktrace": traceback.format_exc(),
+                    "exception.escaped": "False"
+                }
+            )
+            source_span.set_status(trace.StatusCode.ERROR, str(e))
+            aws_fraud_data = {"error": str(e)}
+
+    azure_fraud_data = None
+    with tracer.start_as_current_span("rag.source_access") as source_span:
+        source_span.set_attribute("rag.source.name", "azure_mysql")
+        source_span.set_attribute("db.system", "mysql")
+        try:
+            azure_fraud_data = get_fraud_status_azure(customer_id)
+            save_artifact_and_emit_event(source_span, "azure_mysql", {"type": "mysql_execute", "fraud_data": azure_fraud_data})
+        except Exception as e:
+            source_span.add_event(
+                "exception",
+                attributes={
+                    "exception.type": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ != "builtins" else type(e).__name__,
+                    "exception.message": str(e),
+                    "exception.stacktrace": traceback.format_exc(),
+                    "exception.escaped": "False"
+                }
+            )
+            source_span.set_status(trace.StatusCode.ERROR, str(e))
+            azure_fraud_data = {"error": str(e)}
+
     MAX_HISTORY_CHARS = 1500
     if snowflake_history and len(snowflake_history) > MAX_HISTORY_CHARS:
         logger.warning(
@@ -438,7 +480,11 @@ def assess_credit_risk(customer_id, profile_text, uploaded_files=None):
         f"Profession Profile: {profession_risk['description']}\n"
         f"Risk Multiplier: {profession_risk['risk_multiplier']}\n"
         f"Multiply the final Sanctioned Loan Amount by this modifier as well.\n\n"
-        f"=== SOURCE 6: FINANCIAL DOCUMENTS ===\n"
+        f"=== SOURCE 6: FRAUD BLACKLIST (MYSQL - AWS) ===\n"
+        f"Status: {aws_fraud_data}\n\n"
+        f"=== SOURCE 7: FRAUD BLACKLIST (MYSQL - AZURE) ===\n"
+        f"Status: {azure_fraud_data}\n\n"
+        f"=== SOURCE 8: FINANCIAL DOCUMENTS ===\n"
     )
 
     search_keywords = "salary payslip deposit rent loan repayment overdraft fee bank statement transaction"

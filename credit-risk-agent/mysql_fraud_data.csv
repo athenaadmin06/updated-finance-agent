@@ -1,0 +1,21 @@
+customer_id,is_blacklisted,fraud_reason
+C001,false,
+C002,false,
+C003,false,
+C004,false,
+C005,false,
+C006,false,
+C007,true,Known identity theft ring
+C008,false,
+C009,false,
+C010,true,Previous loan default and absconding
+C011,false,
+C012,false,
+C013,false,
+C014,false,
+C015,true,OFAC sanctioned individual match
+C016,false,
+C017,false,
+C018,false,
+C019,false,
+C020,true,Document forgery detected in past application
