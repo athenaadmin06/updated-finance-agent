@@ -1,0 +1,8 @@
+{
+    "type": "databricks_execute",
+    "profession": "Entrepreneur",
+    "profession_risk": {
+        "risk_multiplier": 0.9,
+        "description": "Variable business income, decrease loan cap by 10%"
+    }
+}

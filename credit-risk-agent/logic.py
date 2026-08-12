@@ -119,6 +119,7 @@ from snowflake_utils import get_loan_eligibility, get_customer_history_from_snow
 from bigquery_utils import get_local_zipcode_risk_from_bq
 from databricks_utils import get_profession_risk_from_databricks
 from mysql_utils import get_fraud_status_aws, get_fraud_status_azure
+from redshift_utils import get_fraud_status_redshift
 
 # --- 1. CONFIGURATION ---
 load_dotenv()
@@ -421,6 +422,26 @@ def assess_credit_risk(customer_id, profile_text, uploaded_files=None):
             source_span.set_status(trace.StatusCode.ERROR, str(e))
             azure_fraud_data = {"error": str(e)}
 
+    redshift_fraud_data = None
+    with tracer.start_as_current_span("rag.source_access") as source_span:
+        source_span.set_attribute("rag.source.name", "redshift")
+        source_span.set_attribute("db.system", "redshift")
+        try:
+            redshift_fraud_data = get_fraud_status_redshift(customer_id)
+            save_artifact_and_emit_event(source_span, "redshift", {"type": "redshift_execute", "fraud_data": redshift_fraud_data})
+        except Exception as e:
+            source_span.add_event(
+                "exception",
+                attributes={
+                    "exception.type": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ != "builtins" else type(e).__name__,
+                    "exception.message": str(e),
+                    "exception.stacktrace": traceback.format_exc(),
+                    "exception.escaped": "False"
+                }
+            )
+            source_span.set_status(trace.StatusCode.ERROR, str(e))
+            redshift_fraud_data = {"error": str(e)}
+
     MAX_HISTORY_CHARS = 1500
     if snowflake_history and len(snowflake_history) > MAX_HISTORY_CHARS:
         logger.warning(
@@ -484,7 +505,9 @@ def assess_credit_risk(customer_id, profile_text, uploaded_files=None):
         f"Status: {aws_fraud_data}\n\n"
         f"=== SOURCE 7: FRAUD BLACKLIST (MYSQL - AZURE) ===\n"
         f"Status: {azure_fraud_data}\n\n"
-        f"=== SOURCE 8: FINANCIAL DOCUMENTS ===\n"
+        f"=== SOURCE 8: FRAUD BLACKLIST (REDSHIFT) ===\n"
+        f"Status: {redshift_fraud_data}\n\n"
+        f"=== SOURCE 9: FINANCIAL DOCUMENTS ===\n"
     )
 
     search_keywords = "salary payslip deposit rent loan repayment overdraft fee bank statement transaction"
