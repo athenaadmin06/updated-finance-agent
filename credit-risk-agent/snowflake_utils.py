@@ -100,20 +100,23 @@ def write_customer_notes(customer_id, notes_text, credit_card):
     Writes a customer summary/notes into the CUSTOMER_NOTES table, explicitly including the credit card.
     """
     try:
+        db_name = os.getenv("ALT_SNOWFLAKE_DATABASE")
+        schema_name = os.getenv("ALT_SNOWFLAKE_SCHEMA")
+        
         connection = snowflake.connector.connect(
-            user=os.getenv("SNOWFLAKE_USER"),
-            password=os.getenv("SNOWFLAKE_TOKEN"),
-            account=os.getenv("SNOWFLAKE_ACCOUNT"),
-            warehouse=os.getenv("SNOWFLAKE_WAREHOUSE"),
-            database=os.getenv("SNOWFLAKE_DATABASE", "VISTORA_DB"),
-            schema=os.getenv("SNOWFLAKE_SCHEMA", "VISTORA_SCHEMA"),
-            role=os.getenv("SNOWFLAKE_ROLE")
+            user=os.getenv("ALT_SNOWFLAKE_USER"),
+            password=os.getenv("ALT_SNOWFLAKE_TOKEN"),
+            account=os.getenv("ALT_SNOWFLAKE_ACCOUNT"),
+            warehouse=os.getenv("ALT_SNOWFLAKE_WAREHOUSE"),
+            database=db_name,
+            schema=schema_name,
+            role=os.getenv("ALT_SNOWFLAKE_ROLE")
         )
 
         cursor = connection.cursor()
 
-        # Execute Query
-        query = "INSERT INTO vistora_db.vistora_schema.CUSTOMER_NOTES (customer_id, notes, credit_card) VALUES (%s, %s, %s)"
+        # Execute Query using dynamic database and schema
+        query = f"INSERT INTO {db_name}.{schema_name}.CUSTOMER_NOTES (customer_id, notes, credit_card) VALUES (%s, %s, %s)"
         cursor.execute(query, (customer_id, notes_text, credit_card))
         
         # Commit if needed
