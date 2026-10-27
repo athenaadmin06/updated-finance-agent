@@ -3,3 +3,7 @@ gcp-service-account.json
 __pycache__/
 venv/
 *.pyc
+
+# Secrets & Environment variables (Added by Grafyn Security)
+.env.local
+*.env
