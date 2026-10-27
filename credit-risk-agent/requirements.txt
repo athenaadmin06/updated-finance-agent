@@ -3,32 +3,32 @@ huggingface-hub==0.36.0
 
 # --- PyTorch CPU (Removed markdown formatting) ---
 --extra-index-url https://download.pytorch.org/whl/cpu
-torch
+torch~=2.0.1
 
 # --- Core Data ---
 numpy==2.2.6
 pandas==2.2.3
 
 # --- RAG Framework (LlamaIndex) ---
-llama-index-core
-llama-index-embeddings-huggingface
-llama-index-vector-stores-opensearch
-llama-index-readers-file
-llama-index-llms-groq
+llama-index-core~=0.5.15
+llama-index-embeddings-huggingface~=0.5.15
+llama-index-vector-stores-opensearch~=0.5.15
+llama-index-readers-file~=0.5.15
+llama-index-llms-groq~=0.5.15
 # Azure ML endpoint uses direct HTTP (requests) - no extra llama-index LLM package needed
 
 # --- NLP & Embeddings ---
 sentence-transformers==5.2.0
 
 # --- Vector Database ---
-opensearch-py
+opensearch-py~=2.1.0
 
 # --- Cloud (AWS S3, Snowflake) ---
 boto3==1.42.12
 snowflake-connector-python==4.1.1
 databricks-sql-connector==4.2.3
-google-cloud-bigquery
-redshift_connector
+google-cloud-bigquery~=3.11.4
+redshift_connector~=2.0.909
 
 # --- OCR & PDF Parsing ---
 pymupdf==1.26.7
@@ -36,17 +36,17 @@ pymupdf==1.26.7
 # --- Web & Utilities ---
 streamlit==1.42.0
 python-dotenv==1.2.1
-requests
+requests~=2.31.0
 
-fastapi
-uvicorn
+fastapi~=0.111.0
+uvicorn~=0.23.2
 
 # --- Observability (OpenTelemetry) ---
-opentelemetry-api
-opentelemetry-sdk
-opentelemetry-exporter-otlp-proto-http
+opentelemetry-api~=1.17.0
+opentelemetry-sdk~=1.17.0
+opentelemetry-exporter-otlp-proto-http~=1.17.0
 
 # --- Omni-Agent ---
-mcp
-fastmcp
-groq
+mcp~=0.1.0
+fastmcp~=0.1.0
+groq~=0.1.0
