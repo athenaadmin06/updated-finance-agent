@@ -2,5 +2,5 @@ services:
   api:
     image: demo/api:latest
     environment:
-      AWS_ACCESS_KEY_ID: AKIAQ7TD3MO9K2LF8WXZ
-      DATABASE_URL: postgres://app_admin:Pr0dDbP4ssw0rd9x@db:5432/credit
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      DATABASE_URL: ${DATABASE_URL}
