@@ -1,7 +1,7 @@
 // FAKE credentials for scanner testing only
 module.exports = {
   aws: {
-    accessKeyId: 'AKIAQ7TD3MO9K2LF8WXZ',
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     region: 'us-east-1',
   },
   awsSecretAccessKey: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYQ9mTdKq3Lz',
