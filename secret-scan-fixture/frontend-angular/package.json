@@ -1,1 +1,1 @@
-{ "name": "demo-angular", "version": "1.0.0", "dependencies": { "@angular/core": "^17.3.0" } }
+{ "name": "demo-angular", "version": "1.0.0", "dependencies": { "@angular/core": ">=17.3.5" } }
