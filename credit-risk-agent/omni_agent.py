@@ -11,12 +11,18 @@ from petstore_api import petstore_tools_schema, petstore_functions
 load_dotenv()
 groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
+class MaxIterationsExceededError(Exception):
+    pass
+
 async def run_omni_agent(user_prompt):
     """
     Connects to the local MCP server via SSE for Hacker News tools, 
     loads local Petstore API tools, and uses the Groq LLM to answer the prompt.
     """
     try:
+        max_iter = int(os.getenv("AGENT_MAX_ITERATIONS", 15))
+        iteration = 0
+
         # 1. Connect to FastMCP Server running locally for Hacker News tools
         async with sse_client("http://localhost:8000/sse") as (read_stream, write_stream):
             async with ClientSession(read_stream, write_stream) as session:
@@ -55,6 +61,10 @@ async def run_omni_agent(user_prompt):
 
                 # 4. Agent Tool-Calling Loop
                 while True:
+                    iteration += 1
+                    if iteration > max_iter:
+                        raise MaxIterationsExceededError(f"Max iterations of {max_iter} exceeded.")
+
                     response = groq_client.chat.completions.create(
                         model="llama-3.3-70b-versatile", 
                         messages=messages,

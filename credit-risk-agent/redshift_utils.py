@@ -4,6 +4,15 @@ import redshift_connector
 from dotenv import load_dotenv
 
 load_dotenv()
+
+REDSHIFT_USER = os.getenv("REDSHIFT_USER")
+if not REDSHIFT_USER:
+    raise RuntimeError("REDSHIFT_USER environment variable must be set. Default credentials are not permitted.")
+
+REDSHIFT_PASSWORD = os.getenv("REDSHIFT_PASSWORD")
+if not REDSHIFT_PASSWORD:
+    raise RuntimeError("REDSHIFT_PASSWORD environment variable must be set. Default credentials are not permitted.")
+
 logger = logging.getLogger(__name__)
 
 def get_fraud_status_redshift(customer_id: str) -> dict:
@@ -16,8 +25,8 @@ def get_fraud_status_redshift(customer_id: str) -> dict:
         connection = redshift_connector.connect(
             host=os.getenv("REDSHIFT_HOST", "dummy-redshift.amazonaws.com"),
             port=int(os.getenv("REDSHIFT_PORT", 5439)),
-            user=os.getenv("REDSHIFT_USER", "admin"),
-            password=os.getenv("REDSHIFT_PASSWORD", "dummy"),
+            user=REDSHIFT_USER,
+            password=REDSHIFT_PASSWORD,
             database=os.getenv("REDSHIFT_DB", "finance_agent_schema")
         )
         cursor = connection.cursor()

@@ -5,20 +5,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
-AWS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_BUCKET_NAME = "qa-grafyn.ai"
 
 def upload_file_to_s3(file_obj, customer_id):
     # 1. Check Config
-    if not AWS_ACCESS_KEY or not AWS_SECRET_KEY or not AWS_BUCKET_NAME:
-        print("❌ S3 Config Error: Missing AWS credentials")
+    if not AWS_BUCKET_NAME:
+        print("❌ S3 Config Error: Missing AWS bucket name")
         return None
 
     s3 = boto3.client(
         's3',
-        aws_access_key_id=AWS_ACCESS_KEY,
-        aws_secret_access_key=AWS_SECRET_KEY,
         region_name='us-west-1'
     )
     

@@ -1,3 +1,4 @@
+import os
 import requests
 from mcp.server.fastmcp import FastMCP
 
@@ -7,6 +8,8 @@ mcp = FastMCP("hacker_news_digest")
 # Base URL for the free Hacker News Firebase API
 HN_BASE_URL = "https://hacker-news.firebaseio.com/v0"
 
+TOOL_TIMEOUT = float(os.getenv("TOOL_TIMEOUT_SECONDS", 30.0))
+
 @mcp.tool()
 def get_top_stories(limit: int = 10) -> list[int]:
     """
@@ -14,7 +17,10 @@ def get_top_stories(limit: int = 10) -> list[int]:
     Use this first to find out what is currently trending.
     """
     try:
-        response = requests.get(f"{HN_BASE_URL}/topstories.json")
+        try:
+            response = requests.get(f"{HN_BASE_URL}/topstories.json", timeout=TOOL_TIMEOUT)
+        except requests.exceptions.Timeout:
+            return "Error: Tool execution timed out after reaching the safety limit."
         response.raise_for_status()
         return response.json()[:limit]
     except Exception as e:
@@ -27,7 +33,10 @@ def get_story_details(story_id: int) -> dict:
     Returns the title, author, score, and URL.
     """
     try:
-        response = requests.get(f"{HN_BASE_URL}/item/{story_id}.json")
+        try:
+            response = requests.get(f"{HN_BASE_URL}/item/{story_id}.json", timeout=TOOL_TIMEOUT)
+        except requests.exceptions.Timeout:
+            return {"error": "Error: Tool execution timed out after reaching the safety limit."}
         response.raise_for_status()
         data = response.json()
         

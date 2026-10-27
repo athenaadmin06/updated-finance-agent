@@ -4,12 +4,17 @@ import os
 
 API_BASE_URL = "https://ww2vgg54gf.execute-api.us-east-1.amazonaws.com/prod"
 
+TOOL_TIMEOUT = float(os.getenv("TOOL_TIMEOUT_SECONDS", 30.0))
+
 def list_pets(pet_type=None):
     """
     Get a list of pets available in the store. Filtering is done locally.
     """
     try:
-        response = requests.get(f"{API_BASE_URL}/pets")
+        try:
+            response = requests.get(f"{API_BASE_URL}/pets", timeout=TOOL_TIMEOUT)
+        except requests.exceptions.Timeout:
+            return "Error: Tool execution timed out after reaching the safety limit."
         response.raise_for_status() 
         all_pets = response.json()
         
@@ -25,7 +30,10 @@ def get_pet_by_id(pet_id):
     Get details for a specific pet using its ID.
     """
     try:
-        response = requests.get(f"{API_BASE_URL}/pets/{pet_id}")
+        try:
+            response = requests.get(f"{API_BASE_URL}/pets/{pet_id}", timeout=TOOL_TIMEOUT)
+        except requests.exceptions.Timeout:
+            return "Error: Tool execution timed out after reaching the safety limit."
         response.raise_for_status()
         return response.json()
     except Exception as e:
