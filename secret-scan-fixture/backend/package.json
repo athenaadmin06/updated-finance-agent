@@ -1,2 +1,12 @@
-{ "name": "demo-backend", "version": "1.0.0", "main": "server.js",
-  "dependencies": { "express": "^4.19.2", "pg": "^8.11.0", "openai": "^4.52.0", "stripe": "^15.0.0" } }
+{
+  "name": "demo-backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.19.2",
+    "pg": "^8.11.0",
+    "openai": "^4.52.0",
+    "stripe": "^15.0.0",
+    "@aws-sdk/client-secrets-manager": "^3.500.0"
+  }
+}
