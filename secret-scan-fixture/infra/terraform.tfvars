@@ -1,2 +1,4 @@
+import os
+
 region = "us-east-1"
-db_password = "Mq7Td3Ko9Lx2Zf8Wv5Bn"
+db_password = os.getenv("DB_PASSWORD")
