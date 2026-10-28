@@ -1,0 +1,11 @@
+azure:
+  keyvault:
+    uri: https://demo-kv.vault.azure.net/
+    client-id: "66666666-7777-8888-9999-000000000000"
+    client-secret: "Hq78Q~mT3oLx9ZfW2vBn5RcY6hJ4pAsE7uGk1dXz"
+  storage:
+    connection-string: "DefaultEndpointsProtocol=https;AccountName=demostorage01;AccountKey=kSaBfZljsK+mScfEwU85qjAsuUda97mz5FiHU5eovDGjb9ygpSMgVatyI+2zrTNNQglDToYccwPpre90/F5T+g==;EndpointSuffix=core.windows.net"
+spring:
+  datasource:
+    url: jdbc:postgresql://demo-pg.postgres.database.azure.com:5432/app
+    password: ${DB_PASSWORD}
