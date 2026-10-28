@@ -1,0 +1,11 @@
+name: deploy
+on: [push]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/login@v2
+        with:
+          creds: '{"clientId":"66666666-7777-8888-9999-000000000000","clientSecret":"Hq78Q~mT3oLx9ZfW2vBn5RcY6hJ4pAsE7uGk1dXz","tenantId":"11111111-2222-3333-4444-555555555555"}'
+      - run: echo "token ${{ secrets.AZURE_TOKEN }}"
