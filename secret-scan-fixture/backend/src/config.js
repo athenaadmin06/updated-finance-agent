@@ -1,14 +1,42 @@
-// FAKE credentials for scanner testing only
-module.exports = {
+// Credentials are no longer hardcoded; they are retrieved from AWS Secrets Manager.
+const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
+
+const region = process.env.AWS_REGION || 'us-east-1';
+const secretId = process.env.APP_SECRETS_ID || 'app/config/secrets';
+
+const client = new SecretsManagerClient({ region });
+
+const config = {
   aws: {
-    accessKeyId: 'AKIAQ7TD3MO9K2LF8WXZ',
-    region: 'us-east-1',
+    accessKeyId: undefined,
+    region,
   },
-  awsSecretAccessKey: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYQ9mTdKq3Lz',
-  githubToken: 'ghp_a1B2c3D4e5F6g7H8i9J0k1L2m3N4o5P6q7R8',
-  slackBotToken: 'xoxb-2048117735521-9x7KqLmVn4TrYwZb',
-  stripeKey: 'sk_live_51Hq7TDmo9k2lf8wxzQ4n6bVc',
-  openaiKey: 'sk-proj-Qm7TdK3oL9xZ2fW8vB5nR1cY6hJ4pA0sE7uG',
-  db: 'postgres://app_admin:Pr0dDbP4ssw0rd9x@prod-db.internal.demo:5432/credit',
-  adminPassword: 'Tr0ub4dor&3xK9mQ',
+  awsSecretAccessKey: undefined,
+  githubToken: undefined,
+  slackBotToken: undefined,
+  stripeKey: undefined,
+  openaiKey: undefined,
+  db: undefined,
+  adminPassword: undefined,
 };
+
+// Call and await this once at application startup before using secret values.
+async function loadSecrets() {
+  const response = await client.send(new GetSecretValueCommand({ SecretId: secretId }));
+  const secrets = JSON.parse(response.SecretString);
+
+  config.aws.accessKeyId = secrets.accessKeyId;
+  config.awsSecretAccessKey = secrets.awsSecretAccessKey;
+  config.githubToken = secrets.githubToken;
+  config.slackBotToken = secrets.slackBotToken;
+  config.stripeKey = secrets.stripeKey;
+  config.openaiKey = secrets.openaiKey;
+  config.db = secrets.db;
+  config.adminPassword = secrets.adminPassword;
+
+  return config;
+}
+
+config.loadSecrets = loadSecrets;
+
+module.exports = config;
