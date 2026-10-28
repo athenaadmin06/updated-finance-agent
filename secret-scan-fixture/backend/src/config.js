@@ -1,4 +1,14 @@
+const { DefaultAzureCredential } = require('@azure/identity');
+const { SecretClient } = require('@azure/keyvault-secrets');
+
 // FAKE credentials for scanner testing only
+const vaultUrl = process.env.AZURE_KEYVAULT_URL || 'https://grafyn-tools-dev.vault.azure.net/';
+
+async function getAdminPassword() {
+  const client = new SecretClient(vaultUrl, new DefaultAzureCredential());
+  return (await client.getSecret('app-azure-key-test')).value;
+}
+
 module.exports = {
   aws: {
     accessKeyId: 'AKIAQ7TD3MO9K2LF8WXZ',
@@ -10,5 +20,5 @@ module.exports = {
   stripeKey: 'sk_live_51Hq7TDmo9k2lf8wxzQ4n6bVc',
   openaiKey: 'sk-proj-Qm7TdK3oL9xZ2fW8vB5nR1cY6hJ4pA0sE7uG',
   db: 'postgres://app_admin:Pr0dDbP4ssw0rd9x@prod-db.internal.demo:5432/credit',
-  adminPassword: 'Tr0ub4dor&3xK9mQ',
+  getAdminPassword,
 };
