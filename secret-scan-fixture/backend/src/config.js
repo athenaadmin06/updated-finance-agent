@@ -1,3 +1,18 @@
+const { DefaultAzureCredential } = require('@azure/identity');
+const { SecretClient } = require('@azure/keyvault-secrets');
+
+const vaultUrl = process.env.AZURE_KEYVAULT_URL || 'https://grafyn-tools-dev.vault.azure.net/';
+
+// Retrieves the secret from Azure Key Vault at runtime (cached after first fetch)
+let cachedAdminPassword;
+async function getAdminPassword() {
+  if (cachedAdminPassword === undefined) {
+    const client = new SecretClient(vaultUrl, new DefaultAzureCredential());
+    cachedAdminPassword = (await client.getSecret('app-azure-key-test')).value;
+  }
+  return cachedAdminPassword;
+}
+
 // FAKE credentials for scanner testing only
 module.exports = {
   aws: {
@@ -10,5 +25,5 @@ module.exports = {
   stripeKey: 'sk_live_51Hq7TDmo9k2lf8wxzQ4n6bVc',
   openaiKey: 'sk-proj-Qm7TdK3oL9xZ2fW8vB5nR1cY6hJ4pA0sE7uG',
   db: 'postgres://app_admin:Pr0dDbP4ssw0rd9x@prod-db.internal.demo:5432/credit',
-  adminPassword: 'Tr0ub4dor&3xK9mQ',
+  getAdminPassword,
 };
