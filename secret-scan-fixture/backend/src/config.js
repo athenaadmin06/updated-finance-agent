@@ -1,14 +1,45 @@
-// FAKE credentials for scanner testing only
-module.exports = {
-  aws: {
-    accessKeyId: 'AKIAQ7TD3MO9K2LF8WXZ',
-    region: 'us-east-1',
-  },
-  awsSecretAccessKey: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYQ9mTdKq3Lz',
-  githubToken: 'ghp_a1B2c3D4e5F6g7H8i9J0k1L2m3N4o5P6q7R8',
-  slackBotToken: 'xoxb-2048117735521-9x7KqLmVn4TrYwZb',
-  stripeKey: 'sk_live_51Hq7TDmo9k2lf8wxzQ4n6bVc',
-  openaiKey: 'sk-proj-Qm7TdK3oL9xZ2fW8vB5nR1cY6hJ4pA0sE7uG',
-  db: 'postgres://app_admin:Pr0dDbP4ssw0rd9x@prod-db.internal.demo:5432/credit',
-  adminPassword: 'Tr0ub4dor&3xK9mQ',
-};
+// Credentials are retrieved from Azure Key Vault at runtime (no hardcoded secrets)
+const { DefaultAzureCredential } = require('@azure/identity');
+const { SecretClient } = require('@azure/keyvault-secrets');
+
+async function loadConfig() {
+  const vaultUrl = process.env.AZURE_KEYVAULT_URL;
+  const client = new SecretClient(vaultUrl, new DefaultAzureCredential());
+  const getSecret = async (name) => (await client.getSecret(name)).value;
+
+  const [
+    accessKeyId,
+    awsSecretAccessKey,
+    githubToken,
+    slackBotToken,
+    stripeKey,
+    openaiKey,
+    db,
+    adminPassword,
+  ] = await Promise.all([
+    getSecret('AWS-ACCESS-KEY-ID'),
+    getSecret('AWS-SECRET-ACCESS-KEY'),
+    getSecret('GITHUB-TOKEN'),
+    getSecret('SLACK-BOT-TOKEN'),
+    getSecret('STRIPE-KEY'),
+    getSecret('OPENAI-API-KEY'),
+    getSecret('DB-CONNECTION-STRING'),
+    getSecret('ADMIN-PASSWORD'),
+  ]);
+
+  return {
+    aws: {
+      accessKeyId,
+      region: 'us-east-1',
+    },
+    awsSecretAccessKey,
+    githubToken,
+    slackBotToken,
+    stripeKey,
+    openaiKey,
+    db,
+    adminPassword,
+  };
+}
+
+module.exports = loadConfig;
