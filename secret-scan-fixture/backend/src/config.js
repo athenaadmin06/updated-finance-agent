@@ -1,4 +1,15 @@
 // FAKE credentials for scanner testing only
+const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
+
+const secretsClient = new SecretsManagerClient({ region: process.env.AWS_REGION || 'us-east-1' });
+
+async function getAdminPassword() {
+  const response = await secretsClient.send(
+    new GetSecretValueCommand({ SecretId: process.env.ADMIN_PASSWORD_SECRET_ID || 'app/admin_password' })
+  );
+  return response.SecretString;
+}
+
 module.exports = {
   aws: {
     accessKeyId: 'AKIAQ7TD3MO9K2LF8WXZ',
@@ -10,5 +21,5 @@ module.exports = {
   stripeKey: 'sk_live_51Hq7TDmo9k2lf8wxzQ4n6bVc',
   openaiKey: 'sk-proj-Qm7TdK3oL9xZ2fW8vB5nR1cY6hJ4pA0sE7uG',
   db: 'postgres://app_admin:Pr0dDbP4ssw0rd9x@prod-db.internal.demo:5432/credit',
-  adminPassword: 'Tr0ub4dor&3xK9mQ',
+  adminPassword: getAdminPassword,
 };
