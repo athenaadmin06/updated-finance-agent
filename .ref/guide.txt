@@ -1,0 +1,18 @@
+java ->>>>>>>>
+& "updated-finance-agent\java-secret-fixture\run-server.ps1"
+curl -i http://localhost:8080/api/health -H "Authorization: Bearer sec_health_check_token_9f8d7c6b5a4e3d2c1b0a"
+
+
+.net ->>>>>>>
+& "updated-finance-agent\dotnet-secret-fixture\run-server.ps1"
+curl -i http://localhost:5000/api/health -H "Authorization: Bearer sec_dotnet_health_token_8a7b6c5d4e3f2a1b0c9d"
+
+
+angular ->>>>>>
+& "updated-finance-agent\angular-secret-fixture\run-server.ps1"
+curl -i http://localhost:4200/api/health -H "Authorization: Bearer sec_angular_health_token_7d6c5b4a3e2f1a0b9c8d"
+
+
+react js ->>>>>>
+& "updated-finance-agent\react-secret-fixture\run-server.ps1"
+curl -i http://localhost:3000/api/health -H "Authorization: Bearer sec_react_health_token_6e5d4c3b2a1f0e9d8c7b"

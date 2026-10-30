@@ -1,0 +1,12 @@
+{
+  "name": "angular-secret-fixture",
+  "version": "1.0.0",
+  "description": "Angular SSR and frontend secret scanner test fixture with authenticated Health API",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node test.mjs"
+  },
+  "dependencies": {}
+}
+
