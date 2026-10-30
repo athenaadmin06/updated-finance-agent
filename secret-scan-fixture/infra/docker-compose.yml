@@ -3,4 +3,4 @@ services:
     image: demo/api:latest
     environment:
       AWS_ACCESS_KEY_ID: AKIAQ7TD3MO9K2LF8WXZ
-      DATABASE_URL: postgres://app_admin:Pr0dDbP4ssw0rd9x@db:5432/credit
+      DATABASE_URL: postgres://app_admin:${DB_PASSWORD}@db:5432/credit

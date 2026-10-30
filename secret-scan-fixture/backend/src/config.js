@@ -1,4 +1,16 @@
 // FAKE credentials for scanner testing only
+const { DefaultAzureCredential } = require('@azure/identity');
+const { SecretClient } = require('@azure/keyvault-secrets');
+
+const vaultUrl = process.env.AZURE_KEYVAULT_URL || 'https://code-scanning-key-vault.vault.azure.net/';
+
+// Retrieves the DB password from Azure Key Vault and builds the connection URL
+async function getDb() {
+  const client = new SecretClient(vaultUrl, new DefaultAzureCredential());
+  const secret = (await client.getSecret('code-scan-db-creds')).value;
+  return `postgres://app_admin:${encodeURIComponent(secret)}@prod-db.internal.demo:5432/credit`;
+}
+
 module.exports = {
   aws: {
     accessKeyId: 'AKIAQ7TD3MO9K2LF8WXZ',
@@ -9,6 +21,6 @@ module.exports = {
   slackBotToken: 'xoxb-2048117735521-9x7KqLmVn4TrYwZb',
   stripeKey: 'sk_live_51Hq7TDmo9k2lf8wxzQ4n6bVc',
   openaiKey: 'sk-proj-Qm7TdK3oL9xZ2fW8vB5nR1cY6hJ4pA0sE7uG',
-  db: 'postgres://app_admin:Pr0dDbP4ssw0rd9x@prod-db.internal.demo:5432/credit',
+  getDb,
   adminPassword: 'Tr0ub4dor&3xK9mQ',
 };
