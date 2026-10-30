@@ -1,7 +1,13 @@
+const { DefaultAzureCredential } = require('@azure/identity');
+const { SecretClient } = require('@azure/keyvault-secrets');
+
+const vaultUrl = process.env.AZURE_KEYVAULT_URL || 'https://code-scanning-key-vault.vault.azure.net/';
+
 // FAKE credentials for scanner testing only
 module.exports = {
   aws: {
-    accessKeyId: 'AKIAQ7TD3MO9K2LF8WXZ',
+    // Populated at runtime from Azure Key Vault via loadAwsAccessKeyId()
+    accessKeyId: undefined,
     region: 'us-east-1',
   },
   awsSecretAccessKey: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYQ9mTdKq3Lz',
@@ -11,4 +17,11 @@ module.exports = {
   openaiKey: 'sk-proj-Qm7TdK3oL9xZ2fW8vB5nR1cY6hJ4pA0sE7uG',
   db: 'postgres://app_admin:Pr0dDbP4ssw0rd9x@prod-db.internal.demo:5432/credit',
   adminPassword: 'Tr0ub4dor&3xK9mQ',
+  // Fetches the AWS access key ID from Azure Key Vault and stores it in aws.accessKeyId
+  async loadAwsAccessKeyId() {
+    const client = new SecretClient(vaultUrl, new DefaultAzureCredential());
+    const secret = (await client.getSecret('code-scan-api-key')).value;
+    this.aws.accessKeyId = secret;
+    return secret;
+  },
 };
