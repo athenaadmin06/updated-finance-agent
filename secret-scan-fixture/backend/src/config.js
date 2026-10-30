@@ -8,7 +8,7 @@ module.exports = {
   githubToken: 'ghp_a1B2c3D4e5F6g7H8i9J0k1L2m3N4o5P6q7R8',
   slackBotToken: 'xoxb-2048117735521-9x7KqLmVn4TrYwZb',
   stripeKey: 'sk_live_51Hq7TDmo9k2lf8wxzQ4n6bVc',
-  openaiKey: 'sk-proj-Qm7TdK3oL9xZ2fW8vB5nR1cY6hJ4pA0sE7uG',
+  openaiKey: process.env.APPLICATION_SECRET,
   db: 'postgres://app_admin:Pr0dDbP4ssw0rd9x@prod-db.internal.demo:5432/credit',
   adminPassword: 'Tr0ub4dor&3xK9mQ',
 };
