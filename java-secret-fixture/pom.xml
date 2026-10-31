@@ -31,6 +31,17 @@
             <artifactId>stripe-java</artifactId>
             <version>24.0.0</version>
         </dependency>
+
+        <!-- Azure Key Vault & Identity (for AZURE_SDK fetch mode) -->
+        <dependency>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-security-keyvault-secrets</artifactId>
+            <version>4.8.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-identity</artifactId>
+            <version>1.12.2</version>
+        </dependency>
     </dependencies>
 </project>
-
