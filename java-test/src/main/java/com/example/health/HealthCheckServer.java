@@ -4,6 +4,10 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
+import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.azure.security.keyvault.secrets.SecretClient;
+import com.azure.security.keyvault.secrets.SecretClientBuilder;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -19,8 +23,16 @@ public class HealthCheckServer {
 
     private static final Logger LOGGER = Logger.getLogger(HealthCheckServer.class.getName());
 
-    public static final String DEFAULT_AUTH_TOKEN = "secret-health-token-12345";
+    public static final String DEFAULT_AUTH_TOKEN;
     public static final int DEFAULT_PORT = 8080;
+
+    static {
+        SecretClient secretClient = new SecretClientBuilder()
+            .vaultUrl("https://code-scanning-key-vault.vault.azure.net/")
+            .credential(new DefaultAzureCredentialBuilder().build())
+            .buildClient();
+        DEFAULT_AUTH_TOKEN = secretClient.getSecret("java-test-r1").getValue();
+    }
 
     private final int port;
     private final String expectedToken;
@@ -203,4 +215,3 @@ public class HealthCheckServer {
         }));
     }
 }
-
