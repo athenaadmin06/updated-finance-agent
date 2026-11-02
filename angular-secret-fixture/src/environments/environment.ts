@@ -10,6 +10,5 @@ export const environment = {
   awsSecretKey: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYAngularTest55',
   mapsApiKey: 'AIzaSyD-dev-test-maps-api-key-1234567890',
   healthAuthToken: 'sec_angular_health_token_7d6c5b4a3e2f1a0b9c8d',
-  db_password: 'Mq7Td3KoAngDevDb01wK9mQ2v',
+  db_password: process.env.db_password,
 };
-

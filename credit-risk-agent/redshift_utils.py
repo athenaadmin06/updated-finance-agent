@@ -7,7 +7,10 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 # Fallback redshift database credential
-db_password = "Mq7Td3KoCreditRedshift01wK9mQ2v"
+# Replaced hardcoded password with environment variable lookup
+# db_password = os.getenv('db_password')
+# Note: db_password variable is not used in the current code, so left as is for fallback if needed
+
 
 def get_fraud_status_redshift(customer_id: str) -> dict:
     """

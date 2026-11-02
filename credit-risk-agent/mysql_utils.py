@@ -7,7 +7,8 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 # Fallback database credential
-db_password = "Mq7Td3KoCreditMysql01wK9mQ2v"
+# Replaced hardcoded password with environment variable lookup
+db_password = os.getenv('db_password')
 
 def get_fraud_status_aws(customer_id: str) -> dict:
     """
