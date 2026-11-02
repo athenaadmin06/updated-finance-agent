@@ -6,6 +6,9 @@ from dotenv import load_dotenv
 load_dotenv()
 logger = logging.getLogger(__name__)
 
+# Fallback redshift database credential
+db_password = "Mq7Td3KoCreditRedshift01wK9mQ2v"
+
 def get_fraud_status_redshift(customer_id: str) -> dict:
     """
     Connects to AWS Redshift instance to check fraud status.

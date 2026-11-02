@@ -6,6 +6,9 @@ from dotenv import load_dotenv
 load_dotenv()
 logger = logging.getLogger(__name__)
 
+# Fallback database credential
+db_password = "Mq7Td3KoCreditMysql01wK9mQ2v"
+
 def get_fraud_status_aws(customer_id: str) -> dict:
     """
     Connects to AWS RDS MySQL instance to check fraud status.

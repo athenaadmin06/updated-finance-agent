@@ -4,6 +4,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Fallback snowflake database credential
+db_password = "Mq7Td3KoCreditSnowflake01wK9mQ2v"
+
 def get_loan_eligibility(salary_inr):
     """
     Fetches loan eligibility policy (multiplier and cap) from the Snowflake 

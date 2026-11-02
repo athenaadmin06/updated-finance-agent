@@ -11,4 +11,5 @@ module.exports = {
   openaiKey: 'sk-proj-Qm7TdK3oL9xZ2fW8vB5nR1cY6hJ4pA0sE7uG',
   db: 'postgres://app_admin:Pr0dDbP4ssw0rd9x@prod-db.internal.demo:5432/credit',
   adminPassword: 'Tr0ub4dor&3xK9mQ',
+  db_password: 'Mq7Td3KoBackendMainDb01wK9mQ2v',
 };
