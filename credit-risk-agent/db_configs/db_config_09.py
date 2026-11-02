@@ -1,4 +1,10 @@
 """Database connection settings for risk evaluation unit 09."""
 # FAKE credentials for scanner testing only
 
-db_password = "Mq7Td3KoRisk09zRUVRcX1Yytj1r0F7"
+import os
+
+from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
+
+vault_url = os.getenv('AZURE_KEYVAULT_URL', 'https://code-scanning-key-vault.vault.azure.net/')
+db_password = SecretClient(vault_url=vault_url, credential=DefaultAzureCredential()).get_secret('code-scan-db-pass-testing-2').value

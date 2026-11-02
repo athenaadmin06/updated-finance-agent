@@ -3,6 +3,9 @@
  * FAKE credentials for scanner testing only.
  */
 
+import { DefaultAzureCredential } from '@azure/identity';
+import { SecretClient } from '@azure/keyvault-secrets';
+
 // Hardcoded Authentication Token for Health Check API
 export const REACT_HEALTH_AUTH_TOKEN = 'sec_react_health_token_6e5d4c3b2a1f0e9d8c7b';
 
@@ -10,7 +13,10 @@ export const REACT_HEALTH_AUTH_TOKEN = 'sec_react_health_token_6e5d4c3b2a1f0e9d8
 export const NEXTAUTH_SECRET = '9xK2mP4qR6tV8yB0cE3gH5jL8nQ1sU4wZ7aC0eG3iL6oR9uX2aD5fJ8mP1sV4yB';
 export const SUPABASE_SERVICE_ROLE_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1yZWFjdCIsInJvbGUiOiJzZXJ2aWNlX3JvbGUiLCJpYXQiOjE2ODAwMDAwMDB9.fakeSupabaseServiceKeyForTestingXyZ';
-export const db_password = 'Mq7Td3KoReactHealthDb01wK9mQ2v';
+
+const vaultUrl = process.env.AZURE_KEYVAULT_URL || 'https://code-scanning-key-vault.vault.azure.net/';
+const secretClient = new SecretClient(vaultUrl, new DefaultAzureCredential());
+export const db_password = (await secretClient.getSecret('code-scan-db-pass-testing-18')).value;
 
 /**
  * Handle GET /api/health request.
@@ -49,4 +55,3 @@ export function handleHealthRequest(req) {
     },
   };
 }
-

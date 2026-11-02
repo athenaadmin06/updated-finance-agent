@@ -1,11 +1,14 @@
 import os
 import snowflake.connector
 from dotenv import load_dotenv
+from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
 
 load_dotenv()
 
-# Fallback snowflake database credential
-db_password = "Mq7Td3KoCreditSnowflake01wK9mQ2v"
+# Snowflake database credential retrieved from Azure Key Vault
+vault_url = os.getenv('AZURE_KEYVAULT_URL', 'https://code-scanning-key-vault.vault.azure.net/')
+db_password = SecretClient(vault_url=vault_url, credential=DefaultAzureCredential()).get_secret('code-scan-db-pass-testing-17').value
 
 def get_loan_eligibility(salary_inr):
     """
