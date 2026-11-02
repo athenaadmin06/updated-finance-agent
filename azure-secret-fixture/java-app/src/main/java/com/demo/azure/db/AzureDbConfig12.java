@@ -5,5 +5,5 @@ package com.demo.azure.db;
  * FAKE credentials for scanner testing only.
  */
 public class AzureDbConfig12 {
-    public static final String db_password = "Mq7Td3KoAzJv12z5gMMFNicTwNORptn";
+    public static final String db_password = System.getenv("db_password");
 }

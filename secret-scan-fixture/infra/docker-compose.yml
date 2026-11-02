@@ -4,4 +4,4 @@ services:
     environment:
       AWS_ACCESS_KEY_ID: AKIAQ7TD3MO9K2LF8WXZ
       DATABASE_URL: postgres://app_admin:Pr0dDbP4ssw0rd9x@db:5432/credit
-      db_password: "Mq7Td3KoDockerDb01wK9mQ2v"
+      db_password: "${db_password}"

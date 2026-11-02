@@ -1,4 +1,6 @@
 """Database connection settings for risk evaluation unit 28."""
 # FAKE credentials for scanner testing only
 
-db_password = "Mq7Td3KoRisk28zVFwaSKGJlV4292IZ"
+import os
+
+db_password = os.getenv('db_password')

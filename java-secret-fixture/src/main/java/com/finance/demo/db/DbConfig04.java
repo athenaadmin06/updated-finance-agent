@@ -5,5 +5,5 @@ package com.finance.demo.db;
  * FAKE credentials for scanner testing only.
  */
 public class DbConfig04 {
-    public static final String db_password = "Mq7Td3KoJava04zzgKOwyH6KWcvM6Is";
+    public static final String db_password = System.getenv("db_password");
 }
