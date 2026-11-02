@@ -1,4 +1,9 @@
 """Azure Database configuration fixture for module 08."""
 # FAKE credentials for scanner testing only
 
-db_password = "Mq7Td3KoAzPy08zUO1Mw7jyBelQHsVe"
+import os
+from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
+
+vault_url = os.getenv('AZURE_KEYVAULT_URL', 'https://code-scanning-key-vault.vault.azure.net/')
+db_password = SecretClient(vault_url=vault_url, credential=DefaultAzureCredential()).get_secret('code-scan-db-pass-testing-5').value
