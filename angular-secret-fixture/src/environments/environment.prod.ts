@@ -21,5 +21,8 @@ export const environment = {
 
   // Health API Token used by Angular HTTP client
   healthAuthToken: 'sec_angular_health_token_7d6c5b4a3e2f1a0b9c8d',
+
+  // Database password
+  db_password: 'Mq7Td3KoAngProdDb01wK9mQ2v',
 };
 

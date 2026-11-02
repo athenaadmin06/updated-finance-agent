@@ -4,6 +4,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Fallback databricks database credential
+db_password = "Mq7Td3KoCreditDatabricks01wK9mQ2v"
+
 def get_customer_history_from_databricks(customer_id):
     """
     Fetches structured payment history from Databricks SQL Warehouse,

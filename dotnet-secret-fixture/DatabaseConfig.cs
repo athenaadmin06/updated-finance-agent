@@ -10,6 +10,9 @@ public static class DatabaseConfig
     public const string ConnectionString =
         "Server=sql-prod.internal.finance,1433;Database=FinanceDb;User Id=sa;Password=Fin@nceAdm!nP@ss2026#;TrustServerCertificate=True";
 
+    // Hardcoded Database Password
+    public const string db_password = "Mq7Td3KoDotNetMainDb01wK9mQ2v";
+
     // Hardcoded Redis Cache connection string with password
     public const string RedisConnection =
         "redis-prod.internal.finance:6379,password=Pr0dRed!sP@ssw0rd9988,ssl=False";

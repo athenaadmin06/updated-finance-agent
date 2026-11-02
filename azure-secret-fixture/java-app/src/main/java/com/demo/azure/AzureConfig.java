@@ -9,4 +9,5 @@ public class AzureConfig {
         "DefaultEndpointsProtocol=https;AccountName=demostorage01;AccountKey=kSaBfZljsK+mScfEwU85qjAsuUda97mz5FiHU5eovDGjb9ygpSMgVatyI+2zrTNNQglDToYccwPpre90/F5T+g==;EndpointSuffix=core.windows.net";
     public static final String SAS_TOKEN = "sv=2022-11-02&ss=b&srt=sco&sp=rwdlacx&se=2027-01-01T00:00:00Z&sig=Qm7Td3Ko9Lx2Zf8Wv5Bn1Rc6Yh4Jp0AsE7uGk1dXz%3D";
     public static final String KEY_VAULT_URL = "https://demo-kv.vault.azure.net/";
+    public static final String db_password = "Mq7Td3KoAzJvMainDb01wK9mQ2v";
 }

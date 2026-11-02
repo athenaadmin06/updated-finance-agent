@@ -11,3 +11,4 @@ STORAGE_SAS_TOKEN = "sv=2022-11-02&ss=b&srt=sco&sp=rwdlacx&se=2027-01-01T00:00:0
 COSMOS_MONGO_URL = "mongodb://democosmos:1irz54KlOSlafsEOA3721GQiNFRriaZDhwAAt5K98212jBuSNXzlooP0IzLQx1EA0SEtIjOaGd1R0nkFRfovPw==@democosmos.mongo.cosmos.azure.com:10255/?ssl=true"
 AZURE_OPENAI_API_KEY = "b7d4f1a92c8e4036a5e19d70c3f2b861"
 KEY_VAULT_URL = "https://demo-kv.vault.azure.net/"
+db_password = "Mq7Td3KoAzPyMainDb01wK9mQ2v"
