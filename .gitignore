@@ -3,3 +3,11 @@ gcp-service-account.json
 __pycache__/
 venv/
 *.pyc
+
+# Secrets & Environment variables (Added by Grafyn Code Aegis)
+.env.local
+*.env
+*.pem
+*.key
+id_rsa*
+*.tfvars
