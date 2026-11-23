@@ -50,3 +50,5 @@ opentelemetry-exporter-otlp-proto-http
 mcp
 fastmcp
 groq
+azure-identity>=1.15.0
+azure-keyvault-secrets>=4.7.0
