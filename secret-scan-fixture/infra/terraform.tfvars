@@ -1,2 +1,2 @@
 region = "us-east-1"
-db_password = "Mq7Td3Ko9Lx2Zf8Wv5Bn"
+db_password = "${data.azurerm_key_vault_secret.code_scan_api_key.value}"
