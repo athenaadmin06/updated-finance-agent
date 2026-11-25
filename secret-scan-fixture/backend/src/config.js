@@ -4,7 +4,7 @@ module.exports = {
     accessKeyId: 'AKIAQ7TD3MO9K2LF8WXZ',
     region: 'us-east-1',
   },
-  awsSecretAccessKey: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYQ9mTdKq3Lz',
+  awsSecretAccessKey: process.env.APPLICATION_SECRET,
   githubToken: 'ghp_a1B2c3D4e5F6g7H8i9J0k1L2m3N4o5P6q7R8',
   slackBotToken: 'xoxb-2048117735521-9x7KqLmVn4TrYwZb',
   stripeKey: 'sk_live_51Hq7TDmo9k2lf8wxzQ4n6bVc',
