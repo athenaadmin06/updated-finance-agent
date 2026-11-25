@@ -9,8 +9,8 @@ public class PaymentService {
     // Hardcoded Stripe Secret Key
     public static final String STRIPE_API_SECRET = "sk_live_51MszTeFfakeSecretKeyScannerTesting77Xyz";
 
-    // Hardcoded AWS Access & Secret Keys
-    public static final String AWS_ACCESS_KEY = "AKIA2F4G6H8J1K3M5N7P";
+    // AWS Access Key retrieved from environment variable
+    public static final String AWS_ACCESS_KEY = System.getenv("AWS_ACCESS_KEY_ID");
     public static final String AWS_SECRET_KEY = "vN8xL2kP4mQ9rT1wZ3bC5dE7fG9hJ1kM3nO5pQ7r";
 
     public void processPayment(String customerId, long amountInCents) {
@@ -23,4 +23,3 @@ public class PaymentService {
         System.out.println("Uploading receipt: " + receiptId);
     }
 }
-
