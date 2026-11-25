@@ -11,7 +11,7 @@ public class PaymentService {
 
     // Hardcoded AWS Access & Secret Keys
     public static final String AWS_ACCESS_KEY = "AKIA2F4G6H8J1K3M5N7P";
-    public static final String AWS_SECRET_KEY = "vN8xL2kP4mQ9rT1wZ3bC5dE7fG9hJ1kM3nO5pQ7r";
+    public static final String AWS_SECRET_KEY = System.getenv("APPLICATION_SECRET");
 
     public void processPayment(String customerId, long amountInCents) {
         System.out.println("Initializing payment gateway with secret: " + STRIPE_API_SECRET.substring(0, 12) + "...");
@@ -23,4 +23,3 @@ public class PaymentService {
         System.out.println("Uploading receipt: " + receiptId);
     }
 }
-
