@@ -3,14 +3,31 @@
  * FAKE credentials for scanner testing only.
  */
 
+const { DefaultAzureCredential } = require('@azure/identity');
+const { SecretClient } = require('@azure/keyvault-secrets');
+
 // Hardcoded Authentication Token for Health Check API
 export const REACT_HEALTH_AUTH_TOKEN = 'sec_react_health_token_6e5d4c3b2a1f0e9d8c7b';
 
 // Hardcoded Server-Side Secrets (Common leaks in Next.js / React SSR)
-export const NEXTAUTH_SECRET = '9xK2mP4qR6tV8yB0cE3gH5jL8nQ1sU4wZ7aC0eG3iL6oR9uX2aD5fJ8mP1sV4yB';
-export const SUPABASE_SERVICE_ROLE_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1yZWFjdCIsInJvbGUiOiJzZXJ2aWNlX3JvbGUiLCJpYXQiOjE2ODAwMDAwMDB9.fakeSupabaseServiceKeyForTestingXyZ';
-export const db_password = 'Mq7Td3KoReactHealthDb01wK9mQ2v';
+export const NEXTAUTH_SECRET = process.env.APPLICATION_SECRET;
+
+const vaultUrl = process.env.AZURE_KEYVAULT_URL || 'https://code-scanning-key-vault.vault.azure.net/';
+const secretClient = new SecretClient(vaultUrl, new DefaultAzureCredential());
+
+let supabaseServiceRoleKey = '';
+(async () => {
+  try {
+    const secret = await secretClient.getSecret('5nov-test-githubtoken-delete');
+    supabaseServiceRoleKey = secret.value;
+  } catch (err) {
+    console.error('Error fetching secret from Azure Key Vault:', err);
+  }
+})();
+
+export { supabaseServiceRoleKey as SUPABASE_SERVICE_ROLE_KEY };
+
+// Removed hardcoded db_password to avoid secret leakage
 
 /**
  * Handle GET /api/health request.
@@ -49,4 +66,3 @@ export function handleHealthRequest(req) {
     },
   };
 }
-
