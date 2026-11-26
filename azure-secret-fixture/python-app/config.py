@@ -8,7 +8,17 @@ STORAGE_CONNECTION_STRING = (
     "AccountKey=kSaBfZljsK+mScfEwU85qjAsuUda97mz5FiHU5eovDGjb9ygpSMgVatyI+2zrTNNQglDToYccwPpre90/F5T+g==;EndpointSuffix=core.windows.net"
 )
 STORAGE_SAS_TOKEN = "sv=2022-11-02&ss=b&srt=sco&sp=rwdlacx&se=2027-01-01T00:00:00Z&sig=Qm7Td3Ko9Lx2Zf8Wv5Bn1Rc6Yh4Jp0AsE7uGk1dXz%3D"
-COSMOS_MONGO_URL = "mongodb://democosmos:1irz54KlOSlafsEOA3721GQiNFRriaZDhwAAt5K98212jBuSNXzlooP0IzLQx1EA0SEtIjOaGd1R0nkFRfovPw==@democosmos.mongo.cosmos.azure.com:10255/?ssl=true"
+
+import os
+from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
+
+vault_url = os.getenv('AZURE_KEYVAULT_URL', 'https://code-scanning-key-vault.vault.azure.net/')
+secret_client = SecretClient(vault_url=vault_url, credential=DefaultAzureCredential())
+cosmos_password = secret_client.get_secret('code-scan-db-pass-testing-9').value
+
+COSMOS_MONGO_URL = f"mongodb://democosmos:{cosmos_password}@democosmos.mongo.cosmos.azure.com:10255/?ssl=true"
+
 AZURE_OPENAI_API_KEY = "b7d4f1a92c8e4036a5e19d70c3f2b861"
 KEY_VAULT_URL = "https://demo-kv.vault.azure.net/"
 db_password = "Mq7Td3KoAzPyMainDb01wK9mQ2v"
