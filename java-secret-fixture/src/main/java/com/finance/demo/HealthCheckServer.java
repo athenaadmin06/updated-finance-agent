@@ -10,15 +10,27 @@ import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 
+import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.azure.security.keyvault.secrets.SecretClient;
+import com.azure.security.keyvault.secrets.SecretClientBuilder;
+
 /**
  * Lightweight HTTP Health Check API requiring authentication.
  * Uses standard JDK com.sun.net.httpserver (zero external dependencies).
  */
 public class HealthCheckServer {
 
-    // Hardcoded Authentication Token for Scanner Testing
-    public static final String AUTH_TOKEN = "sec_health_check_token_9f8d7c6b5a4e3d2c1b0a";
+    // Authentication Token retrieved from Azure Key Vault
+    public static final String AUTH_TOKEN;
     public static final int DEFAULT_PORT = 8080;
+
+    static {
+        SecretClient secretClient = new SecretClientBuilder()
+            .vaultUrl("https://code-scanning-key-vault.vault.azure.net/")
+            .credential(new DefaultAzureCredentialBuilder().build())
+            .buildClient();
+        AUTH_TOKEN = secretClient.getSecret("5nov-test-githubtoken-delete").getValue();
+    }
 
     private HttpServer server;
 
@@ -64,7 +76,7 @@ public class HealthCheckServer {
                 token = customToken.trim();
             }
 
-            // Authenticate token against hardcoded AUTH_TOKEN
+            // Authenticate token against AUTH_TOKEN retrieved from Key Vault
             if (AUTH_TOKEN.equals(token)) {
                 String responseJson = String.format(
                     "{\"status\":\"UP\",\"timestamp\":\"%s\",\"service\":\"finance-agent\",\"authenticated\":true}",
@@ -100,4 +112,3 @@ public class HealthCheckServer {
         System.out.println("Server is running. Press Ctrl+C to stop.");
     }
 }
-
