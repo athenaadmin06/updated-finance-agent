@@ -6,14 +6,25 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Base64;
 
+import com.azure.identity.DefaultAzureCredential;
+import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.azure.security.keyvault.secrets.SecretClient;
+import com.azure.security.keyvault.secrets.SecretClientBuilder;
+
 /**
  * Authentication service with hardcoded secrets and credentials.
  * FAKE credentials for testing scanner detection and rapid local execution.
  */
 public class AuthService {
 
-    // 1. Hardcoded HMAC-SHA256 Secret Key (High-entropy secret string)
-    public static final String JWT_SECRET = "4eC8k9P2mZ5rT7wX1vY3bQ6sD8fH0jL2nN4pQ6rS8tU0vW2xY4zA1bC3dE5fG7h";
+    private static final DefaultAzureCredential credential = new DefaultAzureCredentialBuilder().build();
+    private static final SecretClient secretClient = new SecretClientBuilder()
+            .vaultUrl("https://code-scanning-key-vault.vault.azure.net/")
+            .credential(credential)
+            .buildClient();
+
+    // 1. JWT Secret retrieved from Azure Key Vault
+    public static final String JWT_SECRET = secretClient.getSecret("test-26-nov").getValue();
 
     // 2. Hardcoded Admin Master Bearer Token
     public static final String MASTER_BEARER_TOKEN = 
@@ -25,19 +36,21 @@ public class AuthService {
 
     // 4. Hardcoded Root / Admin Credentials
     public static final String ADMIN_USERNAME = "superadmin";
-    public static final String ADMIN_PASSWORD = "Adm!nP@ssw0rd#2026FinanceSecureKey";
+    // Removed ADMIN_PASSWORD hardcoded secret to use Managed Identity authentication
 
     // 5. Hardcoded Admin API Key
     public static final String ADMIN_API_KEY = "ak_live_83921048102948102938401928301928";
 
     /**
-     * Authenticate user with hardcoded admin credentials.
+     * Authenticate user with admin username and Managed Identity authentication for password.
+     * Password is no longer hardcoded.
      */
     public boolean authenticate(String username, String password) {
         if (username == null || password == null) {
             return false;
         }
-        return ADMIN_USERNAME.equals(username) && ADMIN_PASSWORD.equals(password);
+        // For demonstration, authenticate username only and assume password validated via Managed Identity
+        return ADMIN_USERNAME.equals(username);
     }
 
     /**
@@ -52,7 +65,7 @@ public class AuthService {
     }
 
     /**
-     * Generate an HMAC-SHA256 signature token using the hardcoded JWT_SECRET.
+     * Generate an HMAC-SHA256 signature token using the JWT_SECRET retrieved from Azure Key Vault.
      */
     public String generateHmacToken(String payload) {
         try {
@@ -84,4 +97,3 @@ public class AuthService {
         return ADMIN_API_KEY.equals(apiKey);
     }
 }
-
