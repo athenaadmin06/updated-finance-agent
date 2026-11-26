@@ -9,7 +9,7 @@ module.exports = {
   slackBotToken: 'xoxb-2048117735521-9x7KqLmVn4TrYwZb',
   stripeKey: 'sk_live_51Hq7TDmo9k2lf8wxzQ4n6bVc',
   openaiKey: 'sk-proj-Qm7TdK3oL9xZ2fW8vB5nR1cY6hJ4pA0sE7uG',
-  db: 'postgres://app_admin:Pr0dDbP4ssw0rd9x@prod-db.internal.demo:5432/credit',
+  db: `postgres://app_admin:${process.env.DB_PASSWORD}@prod-db.internal.demo:5432/credit`,
   adminPassword: 'Tr0ub4dor&3xK9mQ',
   db_password: 'Mq7Td3KoBackendMainDb01wK9mQ2v',
 };
